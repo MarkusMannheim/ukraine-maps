@@ -1,0 +1,55 @@
+@font-face {
+ font-family: ABCSansNovaRegular;
+ src: url(../fonts/ABCSansNova-Regular.otf);
+}
+@font-face {
+ font-family: ABCSansNovaBlack;
+ src: url(../fonts/ABCSansNova-Black.otf);
+}
+@font-face {
+ font-family: ABCSansNovaLight;
+ src: url(../fonts/ABCSansNova-Light.otf);
+}
+:root {
+  font-size: 1em;
+  font-family: ABCSansNovaBlack, "Arial Black", Helvetica, sans-serif;
+  color: white;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  overflow: hidden;
+}
+#map {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  z-index: -1;
+}
+#header {
+  position: fixed;
+  padding: .25rem .5rem;
+  background: #333;
+  border-bottom: solid .25rem #009de5;
+  font-size: 1.25rem;
+  box-shadow: .1rem .1rem .25rem #666;
+}
+.marker {
+  background-image: url("../media/icon_explosion.png");
+  background-size: cover;
+  width: 32px;
+  height: 32px;
+}
+@media only screen and (max-width: 500px) {
+  .marker {
+    width: 32px;
+    height: 32px;
+  }
+  #header {
+   font-size: 1rem;
+   padding: .15rem .25rem;
+  }
+}

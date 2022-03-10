@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155991615-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "UA-155991615-1");
+    </script>
+
+    <!-- metaphysics -->
+    <meta charset="utf-8">
+    <title>Mariupol Children's Hospital</title>
+    <meta name="author" content="Markus Mannheim">
+    <meta name="keywords" content="map, data, ukraine, mariupol, childrens, hospital, war">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- stuff for scrapers -->
+    <meta property="og:title" content="Mariupol Children's Hospital">
+    <meta property="og:description" content="Bomb site in the Ukrain-Russian war.">
+    <meta property="og:image" content="https://markusmannheim.github.io/ukraine-maps/media/og_mariupol.jpg">
+    <meta property="og:url" content="https://markusmannheim.github.io/ukraine-maps/mariupol_hospital.html">
+    <meta property="og:type" content="website">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@MarkusMannheim">
+    <meta property="twitter:creator" content="@MarkusMannheim">
+
+    <!-- scripts -->
+    <script src="./resources/d3.v7.min.js"></script>
+    <link href="./resources/style.css" rel="stylesheet">
+    <link href="./resources/abcLogo64.png" rel="icon">
+    <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div id="header">MARIUPOL CHILDREN'S HOSPITAL</div>
+
+    <script>
+      d3.json("./resources/ukr.geojson")
+        .then(function(data) {
+          geodata = data;
+
+          // await fonts
+          document.fonts.onloadingdone = fontsReady();
+        });
+
+      function fontsReady() {
+        map = new maplibregl.Map({
+          container: "map",
+          style: "https://api.maptiler.com/maps/dc538d01-68f4-40de-9402-d798dd44ddb0/style.json?key=M19dPd0s9VScDsnz0U4S",
+          bounds: [22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713]
+        });
+
+        map.on("load", function() {
+          nav = new maplibregl.NavigationControl({
+            showCompass: true,
+            visualisePitch: true,
+            showZoom: false
+          });
+          map.addControl(nav);
+
+          map.fitBounds(
+            [22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713],
+            { padding: 25, duration: 0 }
+          );
+          d3.select("#map")
+            .transition()
+              .duration(1000)
+              .style("opacity", 1);
+
+          baseMap = map.getStyle().layers[0].id;
+
+          map.addSource("ukraine", {
+            type: "geojson",
+            data: geodata
+          });
+
+          map.addLayer({
+            id: "ukraine",
+            type: "fill",
+            source: "ukraine",
+            paint: {
+              "fill-color": "#8495a9",
+              "fill-opacity": .25
+            }
+          }, baseMap);
+
+          hospitalData = {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [37.5249197, 47.1104137]
+            },
+            properties: {
+              name: "Mariupol Children's Hospital"
+            }
+          }
+          hospital = document.createElement("div");
+          hospital.className = "marker";
+
+          marker = new maplibregl.Marker(hospital)
+            .setLngLat(hospitalData.geometry.coordinates)
+            .addTo(map);
+
+          d3.timeout(function() {
+            map.flyTo({
+              center: hospitalData.geometry.coordinates,
+              zoom: 12,
+              pitch: 45,
+              bearing: -15,
+              speed: .5,
+            });
+          }, 2000);
+        });
+      }
+
+    </script>
+  </body>
+</html>
