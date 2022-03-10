@@ -12,16 +12,16 @@
 
     <!-- metaphysics -->
     <meta charset="utf-8">
-    <title>Mariupol Children's Hospital</title>
+    <title>Ukraine war maps</title>
     <meta name="author" content="Markus Mannheim">
-    <meta name="keywords" content="map, data, ukraine, mariupol, childrens, hospital, war">
+    <meta name="keywords" content="map, data, ukraine, russia, war, locations, conflict, attacks">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- stuff for scrapers -->
-    <meta property="og:title" content="Mariupol Children's Hospital">
-    <meta property="og:description" content="Bomb site in the Ukraine-Russian war.">
+    <meta property="og:title" content="Ukraine war maps">
+    <meta property="og:description" content="Sites of significance in the Ukraine-Russia war.">
     <meta property="og:image" content="https://markusmannheim.github.io/ukraine-maps/media/og_mariupol.jpg">
-    <meta property="og:url" content="https://markusmannheim.github.io/ukraine-maps/mariupol_hospital.html">
+    <meta property="og:url" content="https://markusmannheim.github.io/ukraine-maps/">
     <meta property="og:type" content="website">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:site" content="@MarkusMannheim">
@@ -34,14 +34,20 @@
     <link href="./resources/abcLogo64.png" rel="icon">
     <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
   </head>
 
   <body>
     <div id="map"></div>
-    <div id="header">MARIUPOL CHILDREN'S HOSPITAL</div>
+    <div id="header"></div>
 
     <script>
+      // customisable data
+      params = new URL(window.location.href).searchParams;
+      name = params.get("site");
+      lat = +params.get("lat");
+      lng = +params.get("lng");
+      d3.select("#header").text(name.toUpperCase());
+
       d3.json("./resources/ukr.topojson")
         .then(function(data) {
           geodata = topojson.feature(data, data.objects.data);
@@ -60,18 +66,18 @@
         map.on("load", function() {
           nav = new maplibregl.NavigationControl({
             showCompass: true,
-            visualisePitch: true,
-            showZoom: false
+            visualisePitch: true
+            // showZoom: false
           });
           map.addControl(nav);
 
           map.fitBounds(
             [22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713],
-            { padding: 25, duration: 0 }
+            { padding: 32, duration: 0 }
           );
           d3.select("#map")
             .transition()
-              .duration(1000)
+              .duration(500)
               .style("opacity", 1);
 
           baseMap = map.getStyle().layers[0].id;
@@ -90,30 +96,30 @@
             }
           }, baseMap);
 
-          hospitalData = {
+          siteData = {
             type: "Feature",
             geometry: {
               type: "Point",
-              coordinates: [37.5249197, 47.1104137]
+              coordinates: [lng, lat]
             },
             properties: {
-              name: "Mariupol Children's Hospital"
+              name: name
             }
           }
-          hospital = document.createElement("div");
-          hospital.className = "marker";
+          site = document.createElement("div");
+          site.className = "marker";
 
-          marker = new maplibregl.Marker(hospital)
-            .setLngLat(hospitalData.geometry.coordinates)
+          marker = new maplibregl.Marker(site)
+            .setLngLat(siteData.geometry.coordinates)
             .addTo(map);
 
           d3.timeout(function() {
             map.flyTo({
-              center: hospitalData.geometry.coordinates,
-              zoom: 12,
+              center: siteData.geometry.coordinates,
+              zoom: 11,
               pitch: 45,
               bearing: -15,
-              speed: .5,
+              speed: .75,
             });
           }, 2000);
         });
