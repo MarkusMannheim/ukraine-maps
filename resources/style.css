@@ -44,12 +44,18 @@ body {
   height: 32px;
 }
 @media only screen and (max-width: 500px) {
-  .marker {
-    width: 32px;
-    height: 32px;
-  }
   #header {
    font-size: 1rem;
    padding: .15rem .25rem;
   }
+}
+@media only screen and (min-width: 800px) {
+  #header {
+   font-size: 2rem;
+   padding: .5rem 1rem;
+  }
+ .marker {
+   width: 64px;
+   height: 64px;
+ }
 }
