@@ -32,8 +32,8 @@
     <script src="./resources/topojson.v3.min.js"></script>
     <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
-    <script src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
   </head>
 
   <body>
@@ -57,14 +57,15 @@
         });
 
       function fontsReady() {
-        map = new maplibregl.Map({
+        mapboxgl.accessToken = "pk.eyJ1IjoibmV3cy1vbjFpbmUiLCJhIjoiR3FlZFZlVSJ9._30EFE9XYhQitqf4gzRG-g";
+        map = new mapboxgl.Map({
           container: "map",
-          style: "https://api.maptiler.com/maps/dc538d01-68f4-40de-9402-d798dd44ddb0/style.json?key=M19dPd0s9VScDsnz0U4S",
+          style: "mapbox://styles/mapbox/light-v10",
           bounds: [22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713]
         });
 
         map.on("load", function() {
-          nav = new maplibregl.NavigationControl({
+          nav = new mapboxgl.NavigationControl({
             showCompass: true,
             visualisePitch: true
             // showZoom: false
@@ -80,7 +81,7 @@
               .duration(500)
               .style("opacity", 1);
 
-          baseMap = map.getStyle().layers[0].id;
+          baseMap = map.getStyle().layers[2].id;
 
           map.addSource("ukraine", {
             type: "geojson",
@@ -109,7 +110,7 @@
           site = document.createElement("div");
           site.className = "marker";
 
-          marker = new maplibregl.Marker(site)
+          marker = new mapboxgl.Marker(site)
             .setLngLat(siteData.geometry.coordinates)
             .addTo(map);
 
