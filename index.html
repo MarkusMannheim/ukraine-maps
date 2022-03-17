@@ -32,8 +32,8 @@
     <script src="./resources/topojson.v3.min.js"></script>
     <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
-    <script src="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.js"></script>
-    <link href="https://unpkg.com/maplibre-gl@2.1.7/dist/maplibre-gl.css" rel="stylesheet" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
   </head>
 
   <body>
@@ -57,14 +57,15 @@
         });
 
       function fontsReady() {
-        map = new maplibregl.Map({
+        mapboxgl.accessToken = "pk.eyJ1IjoibmV3cy1vbjFpbmUiLCJhIjoiR3FlZFZlVSJ9._30EFE9XYhQitqf4gzRG-g";
+        map = new mapboxgl.Map({
           container: "map",
-          style: "./resources/light.json",
+          style: "mapbox://styles/mapbox/light-v10",
           bounds: [22.0856083513, 44.3614785833, 40.0807890155, 52.3350745713]
         });
 
         map.on("load", function() {
-          nav = new maplibregl.NavigationControl({
+          nav = new mapboxgl.NavigationControl({
             showCompass: true,
             visualisePitch: true
             // showZoom: false
@@ -80,8 +81,6 @@
               .duration(500)
               .style("opacity", 1);
 
-          map.removeLayer("background");
-
           map.addSource("ukraine", {
             type: "geojson",
             data: geodata
@@ -92,9 +91,9 @@
             type: "fill",
             source: "ukraine",
             paint: {
-              "fill-color": "#e6e6e6"
+              "fill-color": "white"
             }
-          }, "park");
+          }, "national-park");
 
           siteData = {
             type: "Feature",
@@ -109,7 +108,7 @@
           site = document.createElement("div");
           site.className = "marker";
 
-          marker = new maplibregl.Marker(site)
+          marker = new mapboxgl.Marker(site)
             .setLngLat(siteData.geometry.coordinates)
             .addTo(map);
 
