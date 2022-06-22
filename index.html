@@ -29,6 +29,7 @@
 
     <!-- scripts -->
     <script src="./resources/d3.v7.min.js"></script>
+    <script src="./config.js"></script>
     <script src="./resources/topojson.v3.min.js"></script>
     <link href="./resources/style.css" rel="stylesheet">
     <link href="./resources/abcLogo64.png" rel="icon">
@@ -57,7 +58,7 @@
         });
 
       function fontsReady() {
-        mapboxgl.accessToken = "pk.eyJ1IjoibmV3cy1vbjFpbmUiLCJhIjoiR3FlZFZlVSJ9._30EFE9XYhQitqf4gzRG-g";
+        mapboxgl.accessToken = config.mapBoxKey;
         map = new mapboxgl.Map({
           container: "map",
           style: "mapbox://styles/mapbox/light-v10",
